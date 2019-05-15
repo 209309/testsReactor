@@ -2,7 +2,6 @@ package edu.iis.mto.testreactor.exc2;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 
 import org.hamcrest.Matchers;
@@ -33,7 +32,7 @@ public class WashingMachineTest {
         // Default LaundryBatch
         laundryBuilder = LaundryBatch.builder();
         laundryBuilder.withType(Material.COTTON);
-        laundryBuilder.withWeightKg(5);
+        laundryBuilder.withWeightKg(1);
         laundryBatch = laundryBuilder.build();
 
         // Default ProgramConfiguration
@@ -45,7 +44,7 @@ public class WashingMachineTest {
         // Default LaundryStatus
         statusBuilder = LaundryStatus.builder();
         statusBuilder.withResult(Result.FAILURE);
-        statusBuilder.withRunnedProgram(null);
+        statusBuilder.withRunnedProgram(Program.MEDIUM);
         statusBuilder.withErrorCode(ErrorCode.TOO_HEAVY);
         laundryStatus = statusBuilder.build();
     }
@@ -130,5 +129,15 @@ public class WashingMachineTest {
 
         verify(waterPump, times(1)).pour(3);
         verify(waterPump, times(1)).release();
+    }
+
+    @Test
+    public void checkIfDirtDetectorWorksProperly() {
+        programBuilder.withProgram(Program.AUTODETECT);
+        programConfiguration = programBuilder.build();
+
+        washingMachine.start(laundryBatch, programConfiguration);
+
+        verify(dirtDetector, times(1)).detectDirtDegree(any());
     }
 }
