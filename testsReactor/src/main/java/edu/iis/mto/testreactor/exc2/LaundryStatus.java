@@ -1,5 +1,7 @@
 package edu.iis.mto.testreactor.exc2;
 
+import java.util.Objects;
+
 public class LaundryStatus {
 
     private final Result result;
@@ -10,6 +12,21 @@ public class LaundryStatus {
         this.result = builder.result;
         this.runnedProgram = builder.runnedProgram;
         this.errorCode = builder.errorCode;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        LaundryStatus that = (LaundryStatus) o;
+        return result == that.result &&
+                runnedProgram == that.runnedProgram &&
+                errorCode == that.errorCode;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(result, runnedProgram, errorCode);
     }
 
     public Result getResult() {
