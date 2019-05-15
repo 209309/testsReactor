@@ -120,4 +120,15 @@ public class WashingMachineTest {
 
         verify(engine, times(1)).runWashing(120);
     }
+
+    @Test
+    public void checkIfWaterPumpWorksProperly() {
+        laundryBuilder.withWeightKg(3);
+        laundryBatch = laundryBuilder.build();
+
+        washingMachine.start(laundryBatch, programConfiguration);
+
+        verify(waterPump, times(1)).pour(3);
+        verify(waterPump, times(1)).release();
+    }
 }
