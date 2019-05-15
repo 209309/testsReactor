@@ -2,6 +2,8 @@ package edu.iis.mto.testreactor.exc2;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.*;
 
 import org.hamcrest.Matchers;
 import org.junit.Before;
@@ -40,7 +42,12 @@ public class WashingMachineTest {
         programBuilder.withSpin(true);
         programConfiguration = programBuilder.build();
 
+        // Default LaundryStatus
         statusBuilder = LaundryStatus.builder();
+        statusBuilder.withResult(Result.FAILURE);
+        statusBuilder.withRunnedProgram(null);
+        statusBuilder.withErrorCode(ErrorCode.TOO_HEAVY);
+        laundryStatus = statusBuilder.build();
     }
 
     @Test
@@ -72,5 +79,25 @@ public class WashingMachineTest {
         laundryStatus = statusBuilder.build();
 
         assertThat(washingMachine.start(laundryBatch, programConfiguration), is(laundryStatus));
+    }
+
+    @Test
+    public void checkIfSpinWasCalledWhenSpinIsFalse() {
+        programBuilder.withSpin(false);
+        programConfiguration = programBuilder.build();
+
+        washingMachine.start(laundryBatch, programConfiguration);
+
+        verify(engine, never()).spin();
+    }
+
+    @Test
+    public void checkIfSpinWasCalledWhenSpinIsTrue() {
+        programBuilder.withSpin(true);
+        programConfiguration = programBuilder.build();
+
+        washingMachine.start(laundryBatch, programConfiguration);
+
+        verify(engine, times(1)).spin();
     }
 }
