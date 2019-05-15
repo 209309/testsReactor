@@ -100,4 +100,24 @@ public class WashingMachineTest {
 
         verify(engine, times(1)).spin();
     }
+
+    @Test
+    public void checkIfShortProgramReturnsProperLength() {
+        programBuilder.withProgram(Program.SHORT);
+        programConfiguration = programBuilder.build();
+
+        washingMachine.start(laundryBatch, programConfiguration);
+
+        verify(engine, times(1)).runWashing(20);
+    }
+
+    @Test
+    public void checkIfLongProgramReturnsProperLength() {
+        programBuilder.withProgram(Program.LONG);
+        programConfiguration = programBuilder.build();
+
+        washingMachine.start(laundryBatch, programConfiguration);
+
+        verify(engine, times(1)).runWashing(120);
+    }
 }
